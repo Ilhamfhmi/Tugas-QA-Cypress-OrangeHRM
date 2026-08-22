@@ -14,36 +14,47 @@ describe('Login Feature', () => {
     cy.wait('@summary').its('response.statusCode').should('be.oneOf', [200, 304]);
     cy.url().should('include', '/dashboard');
   });
+
   it('TC02: Invalid Password', () => {
     cy.intercept('GET', '**/messages**').as('msg');
     loginPage.login(data.invalidUser.username, data.invalidUser.password);
     cy.wait('@msg');
     loginPage.elements.err().should('be.visible');
   });
+
   it('TC03: Empty Username', () => {
-    cy.intercept('GET', '**/messages**').as('msg');
+    // Validasi kosong hanya di UI, tidak perlu intercept API
     loginPage.login(null, data.validUser.password);
     loginPage.elements.req().should('contain', 'Required');
   });
+
   it('TC04: Empty Password', () => {
     loginPage.login(data.validUser.username, null);
     loginPage.elements.req().should('contain', 'Required');
   });
+
   it('TC05: Empty Both', () => {
     loginPage.login(null, null);
     loginPage.elements.req().should('have.length', 2);
   });
+
   it('TC06: Login via Enter', () => {
-    cy.intercept('GET', '**/time-at-work**').as('time');
+    // PERBAIKAN: Menggunakan API yang lebih stabil seperti di TC01
+    cy.intercept('GET', '**/action-summary**').as('summary');
     loginPage.elements.user().type(data.validUser.username);
     loginPage.elements.pass().type(`${data.validUser.password}{enter}`);
-    cy.wait('@time');
+    cy.wait('@summary');
+    cy.url().should('include', '/dashboard');
   });
+
   it('TC07: Case Insensitive Username', () => {
-    cy.intercept('GET', '**/shortcuts**').as('short');
+    // PERBAIKAN: Menggunakan API yang lebih stabil
+    cy.intercept('GET', '**/action-summary**').as('summary');
     loginPage.login(data.validUser.username.toLowerCase(), data.validUser.password);
-    cy.wait('@short');
+    cy.wait('@summary');
+    cy.url().should('include', '/dashboard');
   });
+
   it('TC08: Forgot Password Link', () => {
     cy.intercept('GET', '**/requestPasswordResetCode**').as('reset');
     cy.get('.orangehrm-login-forgot').click();
