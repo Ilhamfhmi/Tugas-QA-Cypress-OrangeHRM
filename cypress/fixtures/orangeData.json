@@ -1,0 +1,14 @@
+{
+  "validUser": { "username": "Admin", "password": "admin123" },
+  "invalidUser": { "username": "Admin", "password": "salahpassword" },
+  "directory": {
+    "validName": "Peter Mac Anderson",
+    "invalidName": "Zxcvbnm",
+    "jobTitle": "Chief Executive Officer"
+  },
+  "recruitment": {
+    "candidateName": "John",
+    "invalidName": "QWERTYUIOP",
+    "vacancy": "Software Engineer"
+  }
+}
